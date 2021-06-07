@@ -19,7 +19,7 @@ after_success:
   # login to docker cli
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # now push images to docker hub
-  - docker push cmuir363/fib-client
   - docker push cmuir363/fib-nginx
   - docker push cmuir363/fib-server
   - docker push cmuir363/fib-worker
+  - docker push cmuir363/fib-client
