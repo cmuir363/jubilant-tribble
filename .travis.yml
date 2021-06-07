@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+# build the images that you want to run tests for
+before_install:
+  - docker build -t cmuir363/react-test -f ./client/Dockerfile.dev ./client
+
+# where the tests will be run
+script:
+  - docker run -e CI=true cmuir363/react-test npm test
+
+# after tests have passed
+after_success:
+  - docker build -t cmuir363/fib-client ./client
+  - docker build -t cmuir363/fib-nginx ./nginx
+  - docker build -t cmuir363/fib-server ./server
+  - docker build -t cmuir363/fib-worker ./worker
+  # login to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # now push images to docker hub
+  - docker push cmuir363/fib-client
+  - docker push cmuir363/fib-nginx
+  - docker push cmuir363/fib-server
+  - docker push cmuir363/fib-worker
